@@ -1,0 +1,46 @@
+services:
+  kmstore:
+    build: 
+      context: .
+      dockerfile: Dockerfile.dev
+    container_name: kmstore
+    restart: always
+    ports:
+      - 3000:3000
+    volumes:
+      - .:/app
+      - /app/node_modules      
+    env_file:
+      - .env
+    environment:
+      #faz com que o docker monitore a atualização dos arquivos
+      - CHOKIDAR_USEPOLLING=true
+      - WATCHPACK_POLLING=true
+    depends_on:
+      - db
+    networks:
+      - km_store
+  
+  db:
+    image: postgres:17
+    container_name: postgres
+    restart: always
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+      
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    ports:
+      - ${POSTGRES_PORT}:5432
+    networks:
+      - km_store
+
+networks:
+  km_store:
+    driver: bridge
+
+volumes:
+  pgdata:
+  node_modules:
