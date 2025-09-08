@@ -1,7 +1,11 @@
+import { Banners } from "@/components/home/banners";
+import { data } from "@/data";
+
 export default function Page(){
+
   return (
     <div>
-      <h1>Home</h1>
+      <Banners list={data.banners}/>
     </div>
   )
 }
